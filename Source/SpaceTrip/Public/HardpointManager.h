@@ -11,7 +11,7 @@ class SPACETRIP_API AHardpointManager : public AActor
 {
 	GENERATED_BODY()
 	
-public:	
+public:
 	// Sets default values for this actor's properties
 	AHardpointManager();
 
@@ -22,30 +22,39 @@ public:
 	void SetActiveHardpoint();
 	void ResetHardpoint();
 
+	UFUNCTION(BlueprintCallable)
+	int GetHardpointsComplete();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<AActor*> m_hardPoints;
+		TArray<AActor*> m_hardPoints;
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AActor> m_key;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_hardpointCooldown;
+		TSubclassOf<AActor> m_key;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_finalCheckpoint;
+		int m_hardpointCooldown;
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+		float m_hardpointDelay;
+	float m_delayTimer;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+		int m_finalCheckpoint;
 	int m_checkpoint;
 
+	int m_hardpointsComplete;
+
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_baseKeyChance;
+		int m_baseKeyChance;
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_keyChanceIncrement;
+		int m_keyChanceIncrement;
 
 	int m_keyChance;
 

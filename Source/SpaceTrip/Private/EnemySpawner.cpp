@@ -102,7 +102,7 @@ void AEnemySpawner::SpawnEnemy()
 			if (toSpawn != nullptr)
 			{
 				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
-				spawnActor->Init(3, /*10,*/ (m_testEnemyBaseSpeed + m_enemySpeedBonus), this);
+				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
 
 				m_spawnedEnemies.Add(spawnActor);
 				m_toSpawn -= 1;

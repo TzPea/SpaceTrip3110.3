@@ -7,9 +7,10 @@
 // Sets default values
 AHardpointManager::AHardpointManager()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	m_delayTimer = m_hardpointDelay;
 	m_hasActive = false;
 	m_checkpointsComplete = false;
 }
@@ -22,7 +23,7 @@ AActor* AHardpointManager::GetRandomHardpoint()
 	{
 		if (Cast<AHardpoint>(m_hardPoints[i]))
 		{
-			if(Cast<AHardpoint>(m_hardPoints[i])->GetCooldown() == 0)
+			if (Cast<AHardpoint>(m_hardPoints[i])->GetCooldown() == 0)
 			{
 				temp.Add(m_hardPoints[i]);
 			}
@@ -75,8 +76,6 @@ void AHardpointManager::EndCheckpoints()
 
 void AHardpointManager::SetActiveHardpoint()
 {
-	m_hasActive = true;
-
 	if (m_checkpointsComplete == false)
 	{
 		m_activeHardpoint = Cast<AHardpoint>(GetNextHardpoint());
@@ -86,8 +85,11 @@ void AHardpointManager::SetActiveHardpoint()
 		m_activeHardpoint = Cast<AHardpoint>(GetRandomHardpoint());
 	}
 
-
-	m_activeHardpoint->SetIsAwake(true);
+	if (m_activeHardpoint != nullptr)
+	{
+		m_activeHardpoint->SetIsAwake(true);
+		m_hasActive = true;
+	}
 }
 
 void AHardpointManager::ResetHardpoint()
@@ -120,15 +122,22 @@ void AHardpointManager::ResetHardpoint()
 
 	m_activeHardpoint->SetCooldown(m_hardpointCooldown);
 
+	m_hardpointsComplete += 1;
+	m_delayTimer = 0;
 	m_activeHardpoint = nullptr;
 	m_hasActive = false;
+}
+
+int AHardpointManager::GetHardpointsComplete()
+{
+	return m_hardpointsComplete;
 }
 
 // Called when the game starts or when spawned
 void AHardpointManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	m_keyChance = m_baseKeyChance;
 }
 
@@ -139,7 +148,12 @@ void AHardpointManager::Tick(float DeltaTime)
 
 	if (m_hasActive == false)
 	{
-		SetActiveHardpoint();
+		m_delayTimer += DeltaTime;
+
+		if (m_delayTimer >= m_hardpointDelay)
+		{
+			SetActiveHardpoint();
+		}
 	}
 	else
 	{
