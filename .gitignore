@@ -1,6 +1,17 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+# According to the website have the following in the gitignore:
+ .vs/*
+ .idea/*
+ .git/*
+ .sln/*
+ Build/*
+ DerivedDataCache/*
+ Intermediate/*
+ Plugins/*/Intermediate/*
+ Saved/*
+
 # Compiled Object files
 *.slo
 *.lo
