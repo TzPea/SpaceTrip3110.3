@@ -55,8 +55,6 @@ private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	float m_spawnpointDelay;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	float m_testEnemyBaseSpeed;
 	UPROPERTY(VisibleAnywhere, Category = "Spawner")
 	float m_enemySpeedBonus;
 	UPROPERTY(VisibleAnywhere, Category = "Spawner")

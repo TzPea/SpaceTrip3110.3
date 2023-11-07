@@ -15,7 +15,7 @@ public:
 	// Sets default values for this character's properties
 	AEnemyBase();
 
-	void Init(int health, /*int attack,*/ float speed, class AEnemySpawner* spawner);
+	void Init(int health, float speed, class AEnemySpawner* spawner);
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsActive();
@@ -29,7 +29,11 @@ public:
 	void SetHealth(int health);
 
 	UFUNCTION(BlueprintCallable)
+	virtual void HitActor();
+	UFUNCTION(BlueprintCallable)
 	virtual void OnDeath();
+	UFUNCTION(BlueprintCallable)
+	void DestroyEnemy();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -41,17 +45,48 @@ protected:
 
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	float m_health;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	float m_speed;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+		int m_medHP;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+		int m_lowHP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+		UStaticMesh* m_fullMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+		UStaticMesh* m_medMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+		UStaticMesh* m_lowMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+		UMaterial* m_fullMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+		UMaterial* m_medMaterial;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+		UMaterial* m_lowMaterial;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	TSubclassOf<AActor> m_ammoType;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	int m_ammoChance;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	class UStaticMeshComponent* m_meshComp;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	class UNiagaraComponent* m_niagara;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	class UNiagaraSystem* m_niagaraSystem;
+
 private:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	int m_health;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	//int m_attack;
-	//UCharacterMovementComponent* m_movementComp;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	//class AEnemyAIController* m_controller;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	UCharacterMovementComponent* m_movementComp;
+	class AAIController* m_controller;
+
+	AActor* m_player;
+
 	bool m_isActive;
 	class AEnemySpawner* m_spawner;
 };
