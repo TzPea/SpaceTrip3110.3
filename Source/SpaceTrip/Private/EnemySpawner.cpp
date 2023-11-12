@@ -48,7 +48,22 @@ TSubclassOf<AActor> AEnemySpawner::GenerateToSpawn()
 		return nullptr;
 	}
 
-	int random  = FMath::RandRange(1, 100);
+	float spawnRatesTotal;
+	TArray<float> trueSpawnRates;
+
+	for (int i = 0; i < m_spawnRates.Num(); i++)
+	{
+		spawnRatesTotal += m_spawnRates[i];
+	}
+
+	for (int i = 0; i < m_spawnRates.Num(); i++)
+	{
+		float truePercent = (m_spawnRates.Num() / spawnRatesTotal) * 100;
+		trueSpawnRates.Add(truePercent);
+	}
+
+
+	float random  = FMath::RandRange(1.0f, spawnRatesTotal);
 
 	int lowRange;
 	int highRange = 1;
@@ -56,7 +71,7 @@ TSubclassOf<AActor> AEnemySpawner::GenerateToSpawn()
 	for (int i = 0; i < m_poolEnemies.Num(); i++)
 	{
 		lowRange = highRange;
-		highRange += m_spawnRates[i];
+		highRange += trueSpawnRates[i];
 
 		if (random >= lowRange && random <= highRange)
 		{
@@ -141,6 +156,11 @@ void AEnemySpawner::DespawnEnemy(class AEnemyBase* enemy)
 
 		enemy->Destroy();
 	}
+}
+
+int AEnemySpawner::GetRemainingEnemies()
+{
+	return m_toSpawn;
 }
 
 // Called every frame

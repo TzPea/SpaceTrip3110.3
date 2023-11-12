@@ -18,6 +18,9 @@ public:
 
 	void DespawnEnemy(class AEnemyBase* enemy);
 
+	UFUNCTION(BlueprintCallable)
+	int GetRemainingEnemies();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 protected:
