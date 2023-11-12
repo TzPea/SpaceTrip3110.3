@@ -29,6 +29,7 @@ protected:
 
 	TSubclassOf<AActor> GenerateToSpawn();
 	void SpawnEnemy();
+	void SpawnMiniBoss();
 	void NewWave();
 
 public:	
@@ -45,7 +46,8 @@ private:
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	class AWaveHandler* m_waveRef;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+
+	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	TArray<AActor*> m_spawnPoints;
 
 	UPROPERTY(VisibleAnywhere, Category = "Spawner")
@@ -64,6 +66,11 @@ private:
 	int m_waveLimit;
 	UPROPERTY(VisibleAnywhere, Category = "Spawner")
 	int m_toSpawn;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<AActor> m_miniBoss;
+
+	bool m_spawnMiniBoss;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	float m_minDistance;

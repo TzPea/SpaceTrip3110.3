@@ -10,8 +10,6 @@ ASpawnPoint::ASpawnPoint()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	//m_component = NewObject<USphereComponent>(this);
 }
 
 void ASpawnPoint::SetSpawnPoint(float min, float max, float delay)
@@ -32,10 +30,8 @@ void ASpawnPoint::SetIsActive()
 	if (m_player != nullptr)
 	{
 		FVector playerPos = m_player->GetActorLocation();
-		playerPos.Z = 0.0f;
 
 		FVector spawnPos = GetActorLocation();
-		spawnPos.Z = 0.0f;
 
 		FVector distance = playerPos - spawnPos;
 
@@ -66,8 +62,10 @@ void ASpawnPoint::BeginPlay()
 	Super::BeginPlay();
 
 	m_player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+
 	m_spawnTimer = 0.0f;
 }
+
 
 // Called every frame
 void ASpawnPoint::Tick(float DeltaTime)
