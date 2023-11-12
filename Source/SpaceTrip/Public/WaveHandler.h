@@ -21,7 +21,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetEnemySpeedBonus();
 	int GetAmountOfEnemies();
+	void IncrementSpawnRates();
 	TArray<int> GetSpawnRates();
+
+	void SetMiniBossCheck(bool check);
+	bool SpawnMiniBossCheck();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -65,8 +69,16 @@ private:
 	TArray<int> m_spawnRatesTwo;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_checkpointWaveThree;
+	TArray<int> m_spawnRateIncrement;
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<int> m_spawnRatesThree;
+	int m_incrementDelay;
 
+	int m_incrementCooldown;
+	bool m_startIncrement;
+
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	int m_miniBossDelay;
+
+	int m_miniBossCooldown;
+	bool m_spawnMiniBoss;
 };
