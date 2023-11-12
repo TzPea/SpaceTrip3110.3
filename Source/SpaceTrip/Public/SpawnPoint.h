@@ -27,7 +27,6 @@ protected:
 
 public:	
 	AActor* m_player;
-	class USphereComponent* m_component;
 
 protected:
 	bool m_isActive;
