@@ -54,7 +54,8 @@ void AAreaManager::UpdateHardpoints()
 void AAreaManager::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
+	UpdateHardpoints();
 	UpdateSpawnpoints();
 }
 
