@@ -23,7 +23,7 @@ AActor* AHardpointManager::GetRandomHardpoint()
 	{
 		if (Cast<AHardpoint>(m_hardPoints[i]))
 		{
-			if (Cast<AHardpoint>(m_hardPoints[i])->GetCooldown() == 0)
+			if (Cast<AHardpoint>(m_hardPoints[i])->GetIsUnlocked() == true && Cast<AHardpoint>(m_hardPoints[i])->GetCooldown() == 0)
 			{
 				temp.Add(m_hardPoints[i]);
 			}

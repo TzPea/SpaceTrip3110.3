@@ -27,6 +27,8 @@ public:
 	int GetCooldown();
 	void SetCooldown(int cooldown);
 	void ReduceCooldown();
+	void SetIsUnlocked(bool check);
+	bool GetIsUnlocked();
 
 	TSubclassOf<AActor> GenerateReward();
 	void SpawnBonus(TSubclassOf<AActor> bonus);
@@ -69,6 +71,7 @@ private:
 
 	int m_cooldown;
 
+	bool m_isUnlocked;
 	bool m_isAwake;
 	bool m_isActive;
 };
