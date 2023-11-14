@@ -124,6 +124,7 @@ void AHardpointManager::ResetHardpoint()
 	}
 
 	m_activeHardpoint->SetCooldown(m_hardpointCooldown);
+	m_activeHardpoint->SetIsStarted(false);
 
 	m_hardpointsComplete += 1;
 	m_delayTimer = 0;
