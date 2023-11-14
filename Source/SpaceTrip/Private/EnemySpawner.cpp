@@ -36,7 +36,7 @@ void AEnemySpawner::BeginPlay()
 
 			if (temp != nullptr)
 			{
-				temp->SetSpawnPoint(m_minDistance, m_maxDistance, m_spawnpointDelay);
+				temp->SetSpawnPoint(m_minDistance, m_maxDistance, m_zAxisCheck, m_spawnpointDelay);
 			}
 		}
 	}

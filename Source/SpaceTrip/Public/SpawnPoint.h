@@ -14,7 +14,7 @@ class SPACETRIP_API ASpawnPoint : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ASpawnPoint();
-	void SetSpawnPoint(float min, float max, float delay);
+	void SetSpawnPoint(float min, float max, float zcheck, float delay);
 	void SetIsActive();
 	bool CheckIsActive();
 	void ResetTimer();
@@ -33,6 +33,8 @@ protected:
 
 	float m_minDistance;
 	float m_maxDistance;
+
+	float m_zAxisClamp;
 
 private:
 	float m_spawnTimer;
