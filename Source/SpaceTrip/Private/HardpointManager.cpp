@@ -50,7 +50,10 @@ AActor* AHardpointManager::GetNextHardpoint()
 	{
 		hardpoint = m_hardPoints[m_checkpoint];
 
-		m_checkpoint += 1;
+		if (hardpoint != nullptr)
+		{
+			m_checkpoint += 1;
+		}
 	}
 
 	if (m_checkpoint >= m_finalCheckpoint)

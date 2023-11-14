@@ -39,6 +39,8 @@ public:
 	float GetTimer();
 	UFUNCTION(BlueprintCallable)
 	bool GetIsActive();
+	UFUNCTION(BlueprintCallable)
+	void SetIsStarted(bool check);
 
 protected:
 	// Called when the game starts or when spawned
@@ -70,6 +72,9 @@ private:
 	float m_timer;
 
 	int m_cooldown;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Hardpoint")
+	bool m_isStarted;
 
 	bool m_isUnlocked;
 	bool m_isAwake;

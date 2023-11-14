@@ -147,6 +147,11 @@ bool AHardpoint::GetIsActive()
 	return m_isActive;
 }
 
+void AHardpoint::SetIsStarted(bool check)
+{
+	m_isStarted = check;
+}
+
 // Called when the game starts or when spawned
 void AHardpoint::BeginPlay()
 {
@@ -162,7 +167,11 @@ void AHardpoint::Tick(float DeltaTime)
 
 	if (m_isUnlocked == false)
 	{
-		return;	
+		return;
+	}
+	if (m_isStarted == false)
+	{
+		return;
 	}
 
 	if (m_isAwake == true)
