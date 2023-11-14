@@ -76,4 +76,6 @@ private:
 	float m_minDistance;
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	float m_maxDistance;
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	float m_zAxisCheck;
 };
