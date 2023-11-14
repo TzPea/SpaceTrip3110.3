@@ -12,10 +12,11 @@ ASpawnPoint::ASpawnPoint()
 	PrimaryActorTick.bCanEverTick = true;
 }
 
-void ASpawnPoint::SetSpawnPoint(float min, float max, float delay)
+void ASpawnPoint::SetSpawnPoint(float min, float max, float zcheck, float delay)
 {
 	m_minDistance = min;
 	m_maxDistance = max;
+	m_zAxisClamp = zcheck;
 	m_spawnDelay = delay;
 }
 
@@ -27,6 +28,7 @@ void ASpawnPoint::SetIsActive()
 		return;
 	}
 
+
 	if (m_player != nullptr)
 	{
 		FVector playerPos = m_player->GetActorLocation();
@@ -35,14 +37,21 @@ void ASpawnPoint::SetIsActive()
 
 		FVector distance = playerPos - spawnPos;
 
+		float zCheck = playerPos.Z - spawnPos.Z;
+
+		if (zCheck > m_zAxisClamp || zCheck < -m_zAxisClamp)
+		{
+			m_isActive = false;
+			return;
+		}
+
 		if (m_minDistance < distance.Size() && distance.Size() < m_maxDistance)
 		{
 			m_isActive = true;
+			return;
 		}
-		else
-		{
-			m_isActive = false;
-		}
+
+		m_isActive = false;
 	}
 }
 
