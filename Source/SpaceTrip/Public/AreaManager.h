@@ -18,6 +18,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsUnlocked(bool check);
 	void UpdateSpawnpoints();
+	void UpdateHardpoints();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -34,4 +35,6 @@ private:
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	TArray<class ASpawnPoint*> m_spawnPoints;
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	TArray<class AHardpoint*> m_hardPoints;
 };

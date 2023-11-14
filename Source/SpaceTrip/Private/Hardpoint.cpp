@@ -13,6 +13,7 @@ AHardpoint::AHardpoint()
 
 	m_cooldown = 0;
 	m_timer = 0.0f;
+	m_isUnlocked = false;
 	m_isAwake = false;
 	m_isActive = false;
 }
@@ -92,6 +93,16 @@ void AHardpoint::ReduceCooldown()
 	}
 }
 
+void AHardpoint::SetIsUnlocked(bool check)
+{
+	m_isUnlocked = check;
+}
+
+bool AHardpoint::GetIsUnlocked()
+{
+	return m_isUnlocked;
+}
+
 TSubclassOf<AActor> AHardpoint::GenerateReward()
 {
 	if (m_rewards.Num() != m_rewardRates.Num())
@@ -148,6 +159,11 @@ void AHardpoint::BeginPlay()
 void AHardpoint::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+
+	if (m_isUnlocked == false)
+	{
+		return;	
+	}
 
 	if (m_isAwake == true)
 	{

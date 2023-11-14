@@ -3,6 +3,7 @@
 
 #include "AreaManager.h"
 #include "SpawnPoint.h"
+#include "Hardpoint.h"
 
 // Sets default values
 AAreaManager::AAreaManager()
@@ -19,6 +20,7 @@ void AAreaManager::SetIsUnlocked(bool check)
 	{
 		m_isUnlocked = check;
 		UpdateSpawnpoints();
+		UpdateHardpoints();
 	}
 }
 
@@ -28,11 +30,26 @@ void AAreaManager::UpdateSpawnpoints()
 	{
 		for (int i = 0; i < m_spawnPoints.Num(); i++)
 		{
-			m_spawnPoints[i]->SetIsUnlocked(m_isUnlocked);
+			if (m_spawnPoints[i] != nullptr)
+			{
+				m_spawnPoints[i]->SetIsUnlocked(m_isUnlocked);
+			}
 		}
 	}
 }
-
+void AAreaManager::UpdateHardpoints()
+{
+	if (m_hardPoints.Num() != 0)
+	{
+		for (int i = 0; i < m_hardPoints.Num(); i++)
+		{
+			if (m_hardPoints[i] != nullptr)
+			{
+				m_hardPoints[i]->SetIsUnlocked(m_isUnlocked);
+			}
+		}
+	}
+}
 // Called when the game starts or when spawned
 void AAreaManager::BeginPlay()
 {
