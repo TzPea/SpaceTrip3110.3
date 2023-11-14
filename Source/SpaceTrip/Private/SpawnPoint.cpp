@@ -65,6 +65,11 @@ void ASpawnPoint::ResetTimer()
 	m_spawnTimer = 0.0f;
 }
 
+void ASpawnPoint::SetIsUnlocked(bool check)
+{
+	m_isUnlocked = check;
+}
+
 // Called when the game starts or when spawned
 void ASpawnPoint::BeginPlay()
 {
@@ -82,6 +87,10 @@ void ASpawnPoint::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 	m_spawnTimer += DeltaTime;
-	SetIsActive();
+
+	if (m_isUnlocked == true)
+	{
+		SetIsActive();
+	}
 }
 

@@ -18,6 +18,8 @@ public:
 	void SetIsActive();
 	bool CheckIsActive();
 	void ResetTimer();
+
+	void SetIsUnlocked(bool check);
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -29,6 +31,7 @@ public:
 	AActor* m_player;
 
 protected:
+	bool m_isUnlocked;
 	bool m_isActive;
 
 	float m_minDistance;
