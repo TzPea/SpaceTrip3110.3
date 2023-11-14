@@ -69,7 +69,7 @@ private:
 	TArray<int> m_spawnRatesTwo;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<int> m_spawnRateIncrement;
+	TArray<float> m_spawnRateIncrement;
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	int m_incrementDelay;
 

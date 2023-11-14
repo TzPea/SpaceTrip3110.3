@@ -22,10 +22,17 @@ bool AHardpoint::CheckForPlayer()
 	if (m_player != nullptr)
 	{
 		FVector pLocation = m_player->GetActorLocation();
-		pLocation.Z = 0.0f;
-
 		FVector hLocation = GetActorLocation();
+
+		float zCheck = pLocation.Z - hLocation.Z;
+
+		if (zCheck > 400 || zCheck < -10)
+		{
+			return false;
+		}
+
 		hLocation.Z = 0.0f;	
+		pLocation.Z = 0.0f;
 
 		FVector distance = pLocation - hLocation;
 
