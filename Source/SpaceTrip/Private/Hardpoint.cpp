@@ -66,6 +66,7 @@ void AHardpoint::CompleteHardpoint()
 	TSubclassOf<AActor> reward = GenerateReward();
 
 	FVector spawnLocation = GetActorLocation();
+	spawnLocation.X += -100;
 	spawnLocation.Z += 90;
 
 	GetWorld()->SpawnActor<AActor>(reward, spawnLocation, GetActorRotation());
@@ -132,6 +133,7 @@ TSubclassOf<AActor> AHardpoint::GenerateReward()
 void AHardpoint::SpawnBonus(TSubclassOf<AActor> bonus)
 {
 	FVector spawnLocation = GetActorLocation();
+	spawnLocation.X += 100;
 	spawnLocation.Z += 90;
 
 	GetWorld()->SpawnActor<AActor>(bonus, spawnLocation, GetActorRotation());
