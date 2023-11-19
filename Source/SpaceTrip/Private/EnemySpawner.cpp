@@ -103,37 +103,40 @@ void AEnemySpawner::SpawnEnemy()
 			}
 		}
 
-		if (activeSpawnPoints.Num() != 0)
+		if (activeSpawnPoints.Num() == 0)
 		{
-			int32 rand = FMath::RandRange(0, (activeSpawnPoints.Num() - 1));
-
-			FVector location = activeSpawnPoints[rand]->GetActorLocation();
-			location.Y += 90.0f;
-
-			const FRotator rotation = activeSpawnPoints[rand]->GetActorRotation();
-
-			//m_poolRef->SpawnEnemy(location, rotation);
-
-			FActorSpawnParameters spawnParams;
-			spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-			TSubclassOf<AActor> toSpawn = GenerateToSpawn();
-
-			if (toSpawn != nullptr)
-			{
-				m_enemiesAlive += 1;
-				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
-				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
-
-				m_spawnedEnemies.Add(spawnActor);
-				m_toSpawn -= 1;
-
-				ASpawnPoint* temp = Cast<ASpawnPoint>(activeSpawnPoints[rand]);
-				temp->ResetTimer();
-
-				m_spawnTimer = 0.0f;
-			}
+			return;
 		}
+
+		int32 rand = FMath::RandRange(0, (activeSpawnPoints.Num() - 1));
+
+		FVector location = activeSpawnPoints[rand]->GetActorLocation();
+		location.Y += 90.0f;
+
+		const FRotator rotation = activeSpawnPoints[rand]->GetActorRotation();
+
+		//m_poolRef->SpawnEnemy(location, rotation);
+
+		FActorSpawnParameters spawnParams;
+		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		TSubclassOf<AActor> toSpawn = GenerateToSpawn();
+
+		if (toSpawn == nullptr)
+		{
+			return;
+		}
+
+		AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
+		spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
+
+		m_spawnedEnemies.Add(spawnActor);
+		m_toSpawn -= 1;
+
+		ASpawnPoint* temp = Cast<ASpawnPoint>(activeSpawnPoints[rand]);
+		temp->ResetTimer();
+
+		m_spawnTimer = 0.0f;
 	}
 }
 
@@ -153,34 +156,38 @@ void AEnemySpawner::SpawnMiniBoss()
 			}
 		}
 
-		if (activeSpawnPoints.Num() != 0)
+		if (activeSpawnPoints.Num() == 0)
 		{
-			int32 rand = FMath::RandRange(0, (activeSpawnPoints.Num() - 1));
-
-			FVector location = activeSpawnPoints[rand]->GetActorLocation();
-			location.Y += 90.0f;
-
-			const FRotator rotation = activeSpawnPoints[rand]->GetActorRotation();
-
-			FActorSpawnParameters spawnParams;
-			spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
-
-			TSubclassOf<AActor> toSpawn = m_miniBoss;
-
-			if (toSpawn != nullptr)
-			{
-				m_enemiesAlive += 1;
-				AActor* spawnActor = GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams);
-				//AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
-				//spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
-
-				ASpawnPoint* temp = Cast<ASpawnPoint>(activeSpawnPoints[rand]);
-				temp->ResetTimer();
-
-				m_spawnMiniBoss = false;
-				m_waveRef->SetMiniBossCheck(false);
-			}
+			return;
 		}
+
+		int32 rand = FMath::RandRange(0, (activeSpawnPoints.Num() - 1));
+
+		FVector location = activeSpawnPoints[rand]->GetActorLocation();
+		location.Y += 90.0f;
+
+		const FRotator rotation = activeSpawnPoints[rand]->GetActorRotation();
+
+		FActorSpawnParameters spawnParams;
+		spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
+
+		TSubclassOf<AActor> toSpawn = m_miniBoss;
+
+		if (toSpawn == nullptr)
+		{
+			return;
+		}
+
+		AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
+
+		spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
+		m_enemiesAlive += 1;
+
+		ASpawnPoint* temp = Cast<ASpawnPoint>(activeSpawnPoints[rand]);
+		temp->ResetTimer();
+
+		m_spawnMiniBoss = false;
+		m_waveRef->SetMiniBossCheck(false);
 	}
 }
 
@@ -197,6 +204,7 @@ void AEnemySpawner::NewWave()
 	m_enemySpeedBonus = m_waveRef->GetEnemySpeedBonus();
 
 	m_toSpawn = m_waveLimit;
+	m_enemiesAlive = m_waveLimit;
 }
 
 void AEnemySpawner::DespawnEnemy(class AEnemyBase* enemy)
@@ -205,10 +213,10 @@ void AEnemySpawner::DespawnEnemy(class AEnemyBase* enemy)
 	{
 		if (m_spawnedEnemies.Contains(enemy))
 		{
-			m_enemiesAlive -= 1;
 			m_spawnedEnemies.Remove(enemy);			
 		}
 
+		m_enemiesAlive -= 1;
 		enemy->Destroy();
 	}
 }
