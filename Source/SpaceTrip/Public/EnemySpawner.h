@@ -66,6 +66,8 @@ private:
 	int m_waveLimit;
 	UPROPERTY(VisibleAnywhere, Category = "Spawner")
 	int m_toSpawn;
+	UPROPERTY(EditAnywhere, Category = "Spawner")
+	int m_enemiesAlive;
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<AActor> m_miniBoss;

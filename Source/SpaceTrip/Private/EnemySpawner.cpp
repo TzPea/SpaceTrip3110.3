@@ -17,6 +17,7 @@ AEnemySpawner::AEnemySpawner()
 	m_spawnDelay = 4.0f;
 	m_spawnTimer = 0.0f;
 	m_spawnMiniBoss = false;
+	m_enemiesAlive = 0;
 }
 
 // Called when the game starts or when spawned
@@ -120,6 +121,7 @@ void AEnemySpawner::SpawnEnemy()
 
 			if (toSpawn != nullptr)
 			{
+				m_enemiesAlive += 1;
 				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
 				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
 
@@ -167,6 +169,7 @@ void AEnemySpawner::SpawnMiniBoss()
 
 			if (toSpawn != nullptr)
 			{
+				m_enemiesAlive += 1;
 				AActor* spawnActor = GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams);
 				//AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
 				//spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
@@ -202,7 +205,8 @@ void AEnemySpawner::DespawnEnemy(class AEnemyBase* enemy)
 	{
 		if (m_spawnedEnemies.Contains(enemy))
 		{
-			m_spawnedEnemies.Remove(enemy);
+			m_enemiesAlive -= 1;
+			m_spawnedEnemies.Remove(enemy);			
 		}
 
 		enemy->Destroy();
@@ -210,8 +214,8 @@ void AEnemySpawner::DespawnEnemy(class AEnemyBase* enemy)
 }
 
 int AEnemySpawner::GetRemainingEnemies()
-{
-	return m_toSpawn;
+{	
+	return m_enemiesAlive;
 }
 
 // Called every frame
