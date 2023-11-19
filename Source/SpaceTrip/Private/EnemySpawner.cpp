@@ -121,7 +121,6 @@ void AEnemySpawner::SpawnEnemy()
 
 			if (toSpawn != nullptr)
 			{
-				m_enemiesAlive += 1;
 				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
 				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
 
@@ -197,6 +196,7 @@ void AEnemySpawner::NewWave()
 	m_enemySpeedBonus = m_waveRef->GetEnemySpeedBonus();
 
 	m_toSpawn = m_waveLimit;
+	m_enemiesAlive = m_waveLimit;
 }
 
 void AEnemySpawner::DespawnEnemy(class AEnemyBase* enemy)
