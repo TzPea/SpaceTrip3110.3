@@ -168,10 +168,10 @@ void AEnemySpawner::SpawnMiniBoss()
 
 			if (toSpawn != nullptr)
 			{
+				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
+				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
+
 				m_enemiesAlive += 1;
-				AActor* spawnActor = GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams);
-				//AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
-				//spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
 
 				ASpawnPoint* temp = Cast<ASpawnPoint>(activeSpawnPoints[rand]);
 				temp->ResetTimer();
@@ -205,10 +205,10 @@ void AEnemySpawner::DespawnEnemy(class AEnemyBase* enemy)
 	{
 		if (m_spawnedEnemies.Contains(enemy))
 		{
-			m_enemiesAlive -= 1;
 			m_spawnedEnemies.Remove(enemy);			
 		}
 
+		m_enemiesAlive -= 1;
 		enemy->Destroy();
 	}
 }
