@@ -38,6 +38,7 @@ private:
 	//UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	//class AEnemyPool* m_poolRef;
 
+
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	int m_amountOfEnemiesIncrement;
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
@@ -78,6 +79,10 @@ private:
 
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	int m_miniBossDelay;
+
+	//UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	//TArray<class USoundWave> m_waveSounds;
+
 
 	int m_miniBossCooldown;
 	bool m_spawnMiniBoss;

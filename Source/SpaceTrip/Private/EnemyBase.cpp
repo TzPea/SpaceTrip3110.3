@@ -173,6 +173,10 @@ void AEnemyBase::Tick(float DeltaTime)
 		{
 			m_controller->MoveTo(m_player);
 		}
+		else if (m_player == nullptr)
+		{
+			m_player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		}
 	}
 }
 

@@ -2,6 +2,7 @@
 
 
 #include "WaveHandler.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AWaveHandler::AWaveHandler()
@@ -63,6 +64,10 @@ void AWaveHandler::NextWave()
 			IncrementSpawnRates();
 		}
 	}
+
+	//int rand = FMath::RandRange(0, (m_waveSounds.Num() - 1));
+
+	//UGameplayStatics::PlaySoundAtLocation(m_waveSounds[rand],  GetActorLocation());
 }
 
 int AWaveHandler::GetWave()
