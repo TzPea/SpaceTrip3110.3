@@ -122,7 +122,7 @@ void AEnemySpawner::SpawnEnemy()
 			if (toSpawn != nullptr)
 			{
 				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
-				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
+				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), m_enemyDespawnDistance, this);
 
 				m_spawnedEnemies.Add(spawnActor);
 				m_toSpawn -= 1;
@@ -169,7 +169,7 @@ void AEnemySpawner::SpawnMiniBoss()
 			if (toSpawn != nullptr)
 			{
 				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
-				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), this);
+				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), 99999, this);
 
 				m_enemiesAlive += 1;
 
@@ -206,6 +206,21 @@ void AEnemySpawner::DespawnEnemy(class AEnemyBase* enemy)
 		if (m_spawnedEnemies.Contains(enemy))
 		{
 			m_spawnedEnemies.Remove(enemy);			
+		}
+
+		m_toSpawn += 1;
+
+		enemy->Destroy();
+	}
+}
+
+void AEnemySpawner::KillEnemy(AEnemyBase* enemy)
+{
+	if (enemy != nullptr)
+	{
+		if (m_spawnedEnemies.Contains(enemy))
+		{
+			m_spawnedEnemies.Remove(enemy);
 		}
 
 		m_enemiesAlive -= 1;

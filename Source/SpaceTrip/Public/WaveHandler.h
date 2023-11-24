@@ -80,8 +80,8 @@ private:
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	int m_miniBossDelay;
 
-	//UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	//TArray<class USoundWave> m_waveSounds;
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	TArray<class USoundWave*> m_waveSounds;
 
 
 	int m_miniBossCooldown;

@@ -2,6 +2,7 @@
 
 
 #include "WaveHandler.h"
+#include "Sound/SoundWave.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -65,9 +66,15 @@ void AWaveHandler::NextWave()
 		}
 	}
 
-	//int rand = FMath::RandRange(0, (m_waveSounds.Num() - 1));
+	if (m_wave == 1)
+	{
+		return;
+	}
 
-	//UGameplayStatics::PlaySoundAtLocation(m_waveSounds[rand],  GetActorLocation());
+	int rand = FMath::RandRange(0, (m_waveSounds.Num() - 1));
+
+	USoundWave* toPlay = m_waveSounds[rand];
+	UGameplayStatics::PlaySoundAtLocation(this, toPlay, GetActorLocation());
 }
 
 int AWaveHandler::GetWave()
