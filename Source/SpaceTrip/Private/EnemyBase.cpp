@@ -15,16 +15,19 @@ AEnemyBase::AEnemyBase()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	m_despawnTimer = 0;
+
 	m_health = 0;
 	m_speed = 0;
 
 	m_isActive = false;
 }
 
-void AEnemyBase::Init(int health,/* int attack,*/ float speed, AEnemySpawner* spawner)
+void AEnemyBase::Init(int health, float speed, float despawnDist, AEnemySpawner* spawner)
 {
 	m_health = health;
 	m_speed = speed;
+	m_despawnDistance = despawnDist;
 
 	m_movementComp = Cast<UCharacterMovementComponent>(GetMovementComponent());
 
@@ -111,11 +114,20 @@ void AEnemyBase::HitActor()
 		}
 	}
 }
-void AEnemyBase::OnDeath()
+void AEnemyBase::OnRespawn()
 {
 	if (m_spawner != nullptr)
 	{
 		m_spawner->DespawnEnemy(this);
+	}
+
+	DestroyEnemy(false);
+}
+void AEnemyBase::OnDeath()
+{
+	if (m_spawner != nullptr)
+	{
+		m_spawner->KillEnemy(this);
 	}
 
 	if (m_niagaraSystem != nullptr)
@@ -124,26 +136,42 @@ void AEnemyBase::OnDeath()
 		m_niagara->Activate();
 	}
 
-	FTimerHandle deathHandle;
-	GetWorldTimerManager().SetTimer(deathHandle, this, &AEnemyBase::DestroyEnemy, 2.0f, false);
-
-	DestroyEnemy();
+	DestroyEnemy(true);
 }
 
-void AEnemyBase::DestroyEnemy()
+void AEnemyBase::DestroyEnemy(bool isKilled)
 {
-	int rand = FMath::RandRange(1, 100);
-
-	if (rand <= m_ammoChance)
+	if (isKilled == true)
 	{
-		FVector location = GetActorLocation();
-		location.Z = 90.0f;
-		FRotator rotation = GetActorRotation();
+		int rand = FMath::RandRange(1, 100);
 
-		GetWorld()->SpawnActor<AActor>(m_ammoType, location, rotation);
+		if (rand <= m_ammoChance)
+		{
+			FVector location = GetActorLocation();
+			location.Z = 90.0f;
+			FRotator rotation = GetActorRotation();
+
+			GetWorld()->SpawnActor<AActor>(m_ammoType, location, rotation);
+		}
 	}
 
 	Destroy();
+}
+
+bool AEnemyBase::DespawnCheck()
+{
+	if (m_player == nullptr)
+	{
+		return false;
+	}
+
+	m_distance = m_playerPos - m_enemyPos;
+
+	if (m_despawnDistance < m_distance.Size())
+	{
+		return true;
+	}
+	return false;
 }
 
 // Called when the game starts or when spawned
@@ -169,13 +197,27 @@ void AEnemyBase::Tick(float DeltaTime)
 
 	if (m_isActive == true)
 	{
+		m_despawnTimer += DeltaTime;
+		m_enemyPos = GetActorLocation();
+
 		if (m_controller != nullptr && m_player != nullptr)
 		{
 			m_controller->MoveTo(m_player);
+			m_playerPos = m_player->GetActorLocation();
 		}
 		else if (m_player == nullptr)
 		{
 			m_player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+		}
+
+		if (m_despawnTimer < 5.0f)
+		{
+			return;
+		}
+
+		if (DespawnCheck() == true)
+		{
+			OnRespawn();
 		}
 	}
 }

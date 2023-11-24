@@ -15,7 +15,7 @@ public:
 	// Sets default values for this character's properties
 	AEnemyBase();
 
-	void Init(int health, float speed, class AEnemySpawner* spawner);
+	void Init(int health, float speed, float despawnDist, class AEnemySpawner* spawner);
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsActive();
@@ -31,9 +31,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	virtual void HitActor();
 	UFUNCTION(BlueprintCallable)
+	virtual void OnRespawn();
+	UFUNCTION(BlueprintCallable)
 	virtual void OnDeath();
 	UFUNCTION(BlueprintCallable)
-	void DestroyEnemy();
+	void DestroyEnemy(bool isKilled);
+
+	bool DespawnCheck();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -86,7 +91,14 @@ private:
 	class AAIController* m_controller;
 
 	AActor* m_player;
+	FVector m_enemyPos;
+	FVector m_playerPos;
+	FVector m_distance;
+
+	float m_despawnDistance;
 
 	bool m_isActive;
 	class AEnemySpawner* m_spawner;
+
+	float m_despawnTimer;
 };

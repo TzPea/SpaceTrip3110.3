@@ -17,6 +17,7 @@ public:
 	AEnemySpawner();
 
 	void DespawnEnemy(class AEnemyBase* enemy);
+	void KillEnemy(class AEnemyBase* enemy);
 
 	UFUNCTION(BlueprintCallable)
 	int GetRemainingEnemies();
@@ -80,4 +81,6 @@ private:
 	float m_maxDistance;
 	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
 	float m_zAxisCheck;
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	float m_enemyDespawnDistance;
 };
