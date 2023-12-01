@@ -19,11 +19,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsActive();
-	void ToggleIsActive();
 
 	UFUNCTION(BlueprintCallable)
 	float GetSpeed();
-	void SetSpeed(float speed);
 	UFUNCTION(BlueprintCallable)
 	int GetHealth();
 	void SetHealth(int health);
@@ -49,6 +47,8 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	FString name;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	float m_health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")

@@ -19,8 +19,8 @@ public:
 	void DespawnEnemy(class AEnemyBase* enemy);
 	void KillEnemy(class AEnemyBase* enemy);
 
-	UFUNCTION(BlueprintCallable)
-	int GetRemainingEnemies();
+	void QueueExtra(TSubclassOf<AActor> extra);
+	void QueueExtra(TArray<TSubclassOf<AActor>> extras);
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -28,59 +28,43 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	TSubclassOf<AActor> GenerateToSpawn();
 	void SpawnEnemy();
-	void SpawnMiniBoss();
 	void NewWave();
+
+	void SpawnExtra();
 
 public:	
 
+	UPROPERTY(EditAnywhere)
+	class AWaveHandler* waveRef;
+
+	UPROPERTY(EditAnywhere)
+	float despawnDistance;
+	UPROPERTY(EditAnywhere)
+	float spawnDelay;
+	UPROPERTY(EditAnywhere)
+	float spawnpointDelay;
+
+	UPROPERTY(EditAnywhere)
+	float minDistance;
+	UPROPERTY(EditAnywhere)
+	float maxDistance;
+	UPROPERTY(EditAnywhere)
+	float zAxisCheck;
+
 private:
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<TSubclassOf<AActor>> m_poolEnemies;
-
-	TArray<int> m_spawnRates;
-
-	/*UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	class AEnemyPool* m_poolRef;*/
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	class AWaveHandler* m_waveRef;
 
 	UPROPERTY(VisibleAnywhere, meta = (AllowPrivateAccess = "true"))
 	TArray<AActor*> m_spawnPoints;
 
-	UPROPERTY(VisibleAnywhere, Category = "Spawner")
-	TArray<class AEnemyBase*> m_spawnedEnemies;
+	TArray<TSubclassOf<AActor>> m_toSpawn;
+	TArray<TSubclassOf<AActor>> m_toSpawnExtras;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	float m_spawnDelay;
+	TArray<AEnemyBase*> m_spawnedEnemies;
+
 	float m_spawnTimer;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	float m_spawnpointDelay;
-
-	UPROPERTY(VisibleAnywhere, Category = "Spawner")
-	float m_enemySpeedBonus;
-	UPROPERTY(VisibleAnywhere, Category = "Spawner")
+	int m_extrasToSpawn;
+	int m_amountToSpawn;
 	int m_waveLimit;
-	UPROPERTY(VisibleAnywhere, Category = "Spawner")
-	int m_toSpawn;
-	UPROPERTY(EditAnywhere, Category = "Spawner")
-	int m_enemiesAlive;
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<AActor> m_miniBoss;
-
-	bool m_spawnMiniBoss;
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	float m_minDistance;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	float m_maxDistance;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	float m_zAxisCheck;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	float m_enemyDespawnDistance;
 };

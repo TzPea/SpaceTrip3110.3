@@ -18,14 +18,12 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	int GetWave();
-	UFUNCTION(BlueprintCallable)
 	float GetEnemySpeedBonus();
-	int GetAmountOfEnemies();
-	void IncrementSpawnRates();
-	TArray<int> GetSpawnRates();
 
-	void SetMiniBossCheck(bool check);
-	bool SpawnMiniBossCheck();
+	TArray<TSubclassOf<AActor>> GenerateWave();
+	TSubclassOf<AActor> GenerateEnemy();
+
+	void IncrementSpawnRates();
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -34,55 +32,56 @@ protected:
 	virtual void BeginPlay() override;
 
 
+public:
+
+	UPROPERTY(EditAnywhere)
+	class AEnemySpawner* spawnerRef;
+
+	UPROPERTY(EditAnywhere)
+	TArray<TSubclassOf<AActor>> poolEnemies;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> miniBoss;
+
+	UPROPERTY(EditAnywhere)
+	int amountOfEnemiesIncrement;
+	UPROPERTY(EditAnywhere)
+	int amountOfEnemiesBase;
+
+	UPROPERTY(EditAnywhere)
+	float enemySpeedBonusIncrement;
+
+	UPROPERTY(EditAnywhere)
+	int difIncreaseCooldown;
+
+	UPROPERTY(EditAnywhere)
+	int waveToIntroduceStrawberries;
+
+	UPROPERTY(EditAnywhere)
+	int waveToIntroduceMelons;
+
+	UPROPERTY(EditAnywhere)
+	TArray<float> spawnRatesIncrement;
+	UPROPERTY(EditAnywhere)
+	int spawnRatesIncrementDelay;
+
+	UPROPERTY(EditAnywhere)
+	int miniBossDelay;
+
+	UPROPERTY(EditAnywhere)
+	TArray<class USoundWave*> waveSounds;
 private:
-	//UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	//class AEnemyPool* m_poolRef;
 
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_amountOfEnemiesIncrement;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_amountOfEnemies;
-
+	UPROPERTY(VisibleAnywhere)
 	int m_wave;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	float m_enemySpeedBonusIncrement;
 	float m_enemySpeedBonus;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_difIncreaseCooldown;
 	int m_difIncreaseTimer;
 
 	TArray<int> m_spawnRates;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<int> m_baseSpawnRates;
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_checkpointWaveOne;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<int> m_spawnRatesOne;
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_checkpointWaveTwo;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<int> m_spawnRatesTwo;
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<float> m_spawnRateIncrement;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_incrementDelay;
-
 	int m_incrementCooldown;
 	bool m_startIncrement;
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	int m_miniBossDelay;
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-	TArray<class USoundWave*> m_waveSounds;
-
 
 	int m_miniBossCooldown;
 	bool m_spawnMiniBoss;
