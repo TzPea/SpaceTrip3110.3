@@ -28,7 +28,7 @@ void AWaveHandler::NextWave()
 {
 	if (m_wave == 0)
 	{
-		m_difIncreaseTimer = difIncreaseCooldown + 1;
+		m_difIncreaseTimer = statIncreaseCooldown + 1;
 	}
 
 	m_wave += 1;
@@ -39,7 +39,7 @@ void AWaveHandler::NextWave()
 	{
 		amountOfEnemiesBase += amountOfEnemiesIncrement;
 		m_enemySpeedBonus += enemySpeedBonusIncrement;
-		m_difIncreaseTimer = difIncreaseCooldown;
+		m_difIncreaseTimer = statIncreaseCooldown;
 	}
 
 	if (m_wave == waveToIntroduceStrawberries)

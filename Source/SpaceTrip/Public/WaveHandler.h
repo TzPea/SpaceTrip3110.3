@@ -51,7 +51,7 @@ public:
 	float enemySpeedBonusIncrement;
 
 	UPROPERTY(EditAnywhere)
-	int difIncreaseCooldown;
+	int statIncreaseCooldown;
 
 	UPROPERTY(EditAnywhere)
 	int waveToIntroduceStrawberries;
