@@ -17,7 +17,7 @@ public:
 
 	bool CheckForPlayer();
 
-	void SetIsAwake(bool isawake);
+	void SetIsAwake(bool isawake, class AHardpointManager* manager);
 
 	UFUNCTION(BlueprintCallable)
 	bool CheckIsAwake();
@@ -52,29 +52,32 @@ public:
 
 public:
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hardpoint")
+		TArray<TSubclassOf<AActor>> m_rewards;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hardpoint")
+		TArray<int> rewardRates;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hardpoint")
+		FString name;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hardpoint")
+		float radius;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hardpoint")
+		int goalTime;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hardpoint")
+		bool isStarted;
 
 private:
 
+	 class AHardpointManager* m_manager;
+
 	AActor* m_player;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Hardpoint")
-	TArray<TSubclassOf<AActor>> m_rewards;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Hardpoint")
-	TArray<int> m_rewardRates;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Hardpoint")
-	FString m_name;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Hardpoint")
-	float m_radius;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Hardpoint")
-	int m_goalTime;
 	float m_timer;
 
 	int m_cooldown;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"), Category = "Hardpoint")
-	bool m_isStarted;
 
 	bool m_isUnlocked;
 	bool m_isAwake;

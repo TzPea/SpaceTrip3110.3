@@ -4,6 +4,7 @@
 #include "Hardpoint.h"
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
+#include "HardpointManager.h"
 
 // Sets default values
 AHardpoint::AHardpoint()
@@ -37,7 +38,7 @@ bool AHardpoint::CheckForPlayer()
 
 		FVector distance = pLocation - hLocation;
 
-		if (distance.Size() < m_radius)
+		if (distance.Size() < radius)
 		{
 			return true;
 		}
@@ -46,8 +47,9 @@ bool AHardpoint::CheckForPlayer()
 	return false;
 }
 
-void AHardpoint::SetIsAwake(bool isawake)
+void AHardpoint::SetIsAwake(bool isawake, AHardpointManager* manager)
 {
+	m_manager = manager;
 	m_isAwake = isawake;
 }
 
@@ -58,7 +60,7 @@ bool AHardpoint::CheckIsAwake()
 
 FString AHardpoint::GetName()
 {
-	return m_name;
+	return name;
 }
 
 void AHardpoint::CompleteHardpoint()
@@ -106,7 +108,7 @@ bool AHardpoint::GetIsUnlocked()
 
 TSubclassOf<AActor> AHardpoint::GenerateReward()
 {
-	if (m_rewards.Num() != m_rewardRates.Num())
+	if (m_rewards.Num() != rewardRates.Num())
 	{
 		return nullptr;
 	}
@@ -119,7 +121,7 @@ TSubclassOf<AActor> AHardpoint::GenerateReward()
 	for (int i = 0; i < m_rewards.Num(); i++)
 	{
 		lowRange = highRange;
-		highRange += m_rewardRates[i];
+		highRange += rewardRates[i];
 
 		if (random >= lowRange && random <= highRange)
 		{
@@ -151,7 +153,12 @@ bool AHardpoint::GetIsActive()
 
 void AHardpoint::SetIsStarted(bool check)
 {
-	m_isStarted = check;
+	if (check == true && m_manager != nullptr)
+	{
+		m_manager->GenerateRandomEvent();
+	}
+
+	isStarted = check;
 }
 
 // Called when the game starts or when spawned
@@ -171,7 +178,7 @@ void AHardpoint::Tick(float DeltaTime)
 	{
 		return;
 	}
-	if (m_isStarted == false)
+	if (isStarted == false)
 	{
 		return;
 	}
@@ -184,7 +191,7 @@ void AHardpoint::Tick(float DeltaTime)
 		{
 			m_timer += DeltaTime;
 
-			if (m_timer > m_goalTime)
+			if (m_timer > goalTime)
 			{
 				CompleteHardpoint();
 			}

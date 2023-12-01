@@ -22,6 +22,7 @@ public:
 	void QueueExtra(TSubclassOf<AActor> extra);
 	void QueueExtra(TArray<TSubclassOf<AActor>> extras);
 
+	void GenerateHardpointEnemies(int grapes, int strawberries, int melons, int bosses);
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 protected:

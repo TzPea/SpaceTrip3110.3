@@ -18,6 +18,8 @@ public:
 	AActor* GetRandomHardpoint();
 	AActor* GetNextHardpoint();
 
+	void GenerateRandomEvent();
+
 	void EndCheckpoints();
 	void SetActiveHardpoint();
 	void ResetHardpoint();
@@ -25,36 +27,48 @@ public:
 	UFUNCTION(BlueprintCallable)
 	int GetHardpointsComplete();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(EditAnywhere)
+	class AEnemySpawner* enemySpawner;
+
+	UPROPERTY(EditAnywhere)
+	TArray<AActor*> hardPoints;
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<AActor> key;
+
+	UPROPERTY(EditAnywhere)
+	int hardpointCooldown;
+	UPROPERTY(EditAnywhere)
+	float delayBetweenHardpoints;
+
+	UPROPERTY(EditAnywhere)
+	int finalCheckpoint;
+
+	UPROPERTY(EditAnywhere)
+	int baseKeyChance;
+	UPROPERTY(EditAnywhere)
+	int keyChanceIncrement;
+
+	UPROPERTY(EditAnywhere)
+	TArray<int> eventOne;
+	UPROPERTY(EditAnywhere)
+	TArray<int> eventTwo;
+	UPROPERTY(EditAnywhere)
+	TArray<int> eventThree;
+	UPROPERTY(EditAnywhere)
+	TArray<int> eventFour;
 private:
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-		TArray<AActor*> m_hardPoints;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-		TSubclassOf<AActor> m_key;
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-		int m_hardpointCooldown;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-		float m_hardpointDelay;
-	float m_delayTimer;
-
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-		int m_finalCheckpoint;
 	int m_checkpoint;
-
 	int m_hardpointsComplete;
 
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-		int m_baseKeyChance;
-	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
-		int m_keyChanceIncrement;
+	float m_delayTimer;
 
 	int m_keyChance;
 
