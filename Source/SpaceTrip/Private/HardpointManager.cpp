@@ -3,6 +3,7 @@
 
 #include "HardpointManager.h"
 #include "Hardpoint.h"
+#include "EnemySpawner.h"
 
 // Sets default values
 AHardpointManager::AHardpointManager()
@@ -10,7 +11,7 @@ AHardpointManager::AHardpointManager()
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	m_delayTimer = m_hardpointDelay;
+	m_delayTimer = delayBetweenHardpoints;
 	m_hasActive = false;
 	m_checkpointsComplete = false;
 }
@@ -19,13 +20,13 @@ AActor* AHardpointManager::GetRandomHardpoint()
 {
 	TArray<AActor*> temp;
 
-	for (int i = 0; i < m_hardPoints.Num(); i++)
+	for (int i = 0; i < hardPoints.Num(); i++)
 	{
-		if (Cast<AHardpoint>(m_hardPoints[i]))
+		if (Cast<AHardpoint>(hardPoints[i]))
 		{
-			if (Cast<AHardpoint>(m_hardPoints[i])->GetIsUnlocked() == true && Cast<AHardpoint>(m_hardPoints[i])->GetCooldown() == 0)
+			if (Cast<AHardpoint>(hardPoints[i])->GetIsUnlocked() == true && Cast<AHardpoint>(hardPoints[i])->GetCooldown() == 0)
 			{
-				temp.Add(m_hardPoints[i]);
+				temp.Add(hardPoints[i]);
 			}
 		}
 	}
@@ -46,9 +47,9 @@ AActor* AHardpointManager::GetNextHardpoint()
 {
 	AActor* hardpoint = nullptr;
 
-	if (Cast<AHardpoint>(m_hardPoints[m_checkpoint]))
+	if (Cast<AHardpoint>(hardPoints[m_checkpoint]))
 	{
-		hardpoint = m_hardPoints[m_checkpoint];
+		hardpoint = hardPoints[m_checkpoint];
 
 		if (hardpoint != nullptr)
 		{
@@ -56,7 +57,7 @@ AActor* AHardpointManager::GetNextHardpoint()
 		}
 	}
 
-	if (m_checkpoint >= m_finalCheckpoint)
+	if (m_checkpoint >= finalCheckpoint)
 	{
 		EndCheckpoints();
 	}
@@ -64,13 +65,34 @@ AActor* AHardpointManager::GetNextHardpoint()
 	return hardpoint;
 }
 
+void AHardpointManager::GenerateRandomEvent()
+{
+	int rand = FMath::RandRange(1, 4);
+
+	switch (rand)
+	{
+		case 1:
+			enemySpawner->GenerateHardpointEnemies(eventOne[0], eventOne[1], eventOne[2], eventOne[3]);
+			break;
+		case 2:
+			enemySpawner->GenerateHardpointEnemies(eventTwo[0], eventTwo[1], eventTwo[2], eventTwo[3]);
+			break;
+		case 3:
+			enemySpawner->GenerateHardpointEnemies(eventThree[0], eventThree[1], eventThree[2], eventThree[3]);
+			break;
+		case 4:
+			enemySpawner->GenerateHardpointEnemies(eventFour[0], eventFour[1], eventFour[2], eventFour[3]);
+			break;
+	}
+}
+
 void AHardpointManager::EndCheckpoints()
 {
-	for (int i = 0; i < m_hardPoints.Num(); i++)
+	for (int i = 0; i < hardPoints.Num(); i++)
 	{
-		if (Cast<AHardpoint>(m_hardPoints[i]))
+		if (Cast<AHardpoint>(hardPoints[i]))
 		{
-			Cast<AHardpoint>(m_hardPoints[i])->SetCooldown(0);
+			Cast<AHardpoint>(hardPoints[i])->SetCooldown(0);
 		}
 	}
 
@@ -90,16 +112,16 @@ void AHardpointManager::SetActiveHardpoint()
 
 	if (m_activeHardpoint != nullptr)
 	{
-		m_activeHardpoint->SetIsAwake(true);
+		m_activeHardpoint->SetIsAwake(true, this);
 		m_hasActive = true;
 	}
 }
 
 void AHardpointManager::ResetHardpoint()
 {
-	for (int i = 0; i < m_hardPoints.Num(); i++)
+	for (int i = 0; i < hardPoints.Num(); i++)
 	{
-		Cast<AHardpoint>(m_hardPoints[i])->ReduceCooldown();
+		Cast<AHardpoint>(hardPoints[i])->ReduceCooldown();
 	}
 
 	if (m_checkpointsComplete == true)
@@ -108,22 +130,22 @@ void AHardpointManager::ResetHardpoint()
 
 		if (rand <= m_keyChance)
 		{
-			m_activeHardpoint->SpawnBonus(m_key);
+			m_activeHardpoint->SpawnBonus(key);
 		}
 		else
 		{
-			m_keyChance += m_keyChanceIncrement;
+			m_keyChance += keyChanceIncrement;
 		}
 	}
 	else
 	{
 		if (m_checkpoint == 1 || m_checkpoint == 3)
 		{
-			m_activeHardpoint->SpawnBonus(m_key);
+			m_activeHardpoint->SpawnBonus(key);
 		}
 	}
 
-	m_activeHardpoint->SetCooldown(m_hardpointCooldown);
+	m_activeHardpoint->SetCooldown(hardpointCooldown);
 	m_activeHardpoint->SetIsStarted(false);
 
 	m_hardpointsComplete += 1;
@@ -142,7 +164,7 @@ void AHardpointManager::BeginPlay()
 {
 	Super::BeginPlay();
 
-	m_keyChance = m_baseKeyChance;
+	m_keyChance = baseKeyChance;
 }
 
 // Called every frame
@@ -154,7 +176,7 @@ void AHardpointManager::Tick(float DeltaTime)
 	{
 		m_delayTimer += DeltaTime;
 
-		if (m_delayTimer >= m_hardpointDelay)
+		if (m_delayTimer >= delayBetweenHardpoints)
 		{
 			SetActiveHardpoint();
 		}

@@ -157,6 +157,38 @@ void AEnemySpawner::QueueExtra(TArray<TSubclassOf<AActor>> extras)
 	extras.Empty();
 }
 
+void AEnemySpawner::GenerateHardpointEnemies(int grapes, int strawberries, int melons, int bosses)
+{
+	if (grapes > 0)
+	{
+		for (int i = 0; i < grapes; i++)
+		{
+			QueueExtra(waveRef->poolEnemies[0]);
+		}
+	}
+	if (strawberries > 0)
+	{
+		for (int i = 0; i < strawberries; i++)
+		{
+			QueueExtra(waveRef->poolEnemies[1]);
+		}
+	}
+	if (melons > 0)
+	{
+		for (int i = 0; i < melons; i++)
+		{
+			QueueExtra(waveRef->poolEnemies[2]);
+		}
+	}
+	if (bosses > 0)
+	{
+		for (int i = 0; i < bosses; i++)
+		{
+			QueueExtra(waveRef->miniBoss);
+		}
+	}
+}
+
 void AEnemySpawner::DespawnEnemy(class AEnemyBase* enemy)
 {
 	if (enemy != nullptr)
