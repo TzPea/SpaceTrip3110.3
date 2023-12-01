@@ -23,12 +23,12 @@ AEnemyBase::AEnemyBase()
 	m_isActive = false;
 }
 
-void AEnemyBase::Init(int health, float speed, float despawnDist, AEnemySpawner* spawner)
+void AEnemyBase::Init(int health, float speed, float despawnDistance, AEnemySpawner* spawner)
 {
 	m_health = health;
 	m_speed = speed;
-	m_despawnDistance = despawnDist;
 
+	m_despawnDistance = despawnDistance;
 	m_movementComp = Cast<UCharacterMovementComponent>(GetMovementComponent());
 
 	if (m_movementComp != nullptr)
@@ -46,19 +46,9 @@ bool AEnemyBase::GetIsActive()
 	return m_isActive;
 }
 
-void AEnemyBase::ToggleIsActive()
-{
-	m_isActive = !m_isActive;
-}
-
 float AEnemyBase::GetSpeed()
 {
 	return m_speed;
-}
-
-void AEnemyBase::SetSpeed(float speed)
-{
-	m_speed = speed;
 }
 
 int AEnemyBase::GetHealth()
@@ -161,6 +151,11 @@ void AEnemyBase::DestroyEnemy(bool isKilled)
 bool AEnemyBase::DespawnCheck()
 {
 	if (m_player == nullptr)
+	{
+		return false;
+	}
+
+	if (name.Compare("Tank") == 0)
 	{
 		return false;
 	}

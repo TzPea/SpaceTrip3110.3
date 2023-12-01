@@ -2,7 +2,6 @@
 
 #include "EnemySpawner.h"
 #include "SpawnPoint.h"
-#include "EnemyPool.h"
 #include "WaveHandler.h"
 #include "EnemyBase.h"
 #include "Kismet/GameplayStatics.h"
@@ -12,12 +11,9 @@ AEnemySpawner::AEnemySpawner()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	m_toSpawn = 0;
-	m_spawnDelay = 4.0f;
+	
+	spawnDelay = 4.0f;
 	m_spawnTimer = 0.0f;
-	m_spawnMiniBoss = false;
-	m_enemiesAlive = 0;
 }
 
 // Called when the game starts or when spawned
@@ -37,56 +33,12 @@ void AEnemySpawner::BeginPlay()
 
 			if (temp != nullptr)
 			{
-				temp->SetSpawnPoint(m_minDistance, m_maxDistance, m_zAxisCheck, m_spawnpointDelay);
+				temp->SetSpawnPoint(minDistance, maxDistance, zAxisCheck, spawnpointDelay);
 			}
 		}
 	}
 }
-
-TSubclassOf<AActor> AEnemySpawner::GenerateToSpawn()
-{
-
-	m_spawnRates = m_waveRef->GetSpawnRates();
-
-	if (m_poolEnemies.Num() != m_spawnRates.Num())
-	{
-		return nullptr;
-	}
-
-	float spawnRatesTotal = 0;
-	TArray<float> trueSpawnRates;
-
-	for (int i = 0; i < m_spawnRates.Num(); i++)
-	{
-		spawnRatesTotal += m_spawnRates[i];
-	}
-
-	for (int i = 0; i < m_spawnRates.Num(); i++)
-	{
-		float truePercent = (m_spawnRates[i] / spawnRatesTotal) * 100;
-		trueSpawnRates.Add(truePercent);
-	}
-
-
-	float random  = FMath::RandRange(1.0f, spawnRatesTotal);
-
-	float lowRange;
-	float highRange = 1;
-
-	for (int i = 0; i < m_poolEnemies.Num(); i++)
-	{
-		lowRange = highRange;
-		highRange += trueSpawnRates[i];
-
-		if (random >= lowRange && random <= highRange)
-		{
-			return m_poolEnemies[i];
-		}
-	}
-
-	return nullptr;
-}
-
+#
 void AEnemySpawner::SpawnEnemy()
 {
 	if (m_spawnPoints.Num() != 0)
@@ -112,20 +64,19 @@ void AEnemySpawner::SpawnEnemy()
 
 			const FRotator rotation = activeSpawnPoints[rand]->GetActorRotation();
 
-			//m_poolRef->SpawnEnemy(location, rotation);
-
 			FActorSpawnParameters spawnParams;
 			spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-			TSubclassOf<AActor> toSpawn = GenerateToSpawn();
+			TSubclassOf<AActor>* toSpawn = &m_toSpawn[0];
 
 			if (toSpawn != nullptr)
 			{
-				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
-				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), m_enemyDespawnDistance, this);
+				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(*toSpawn, location, rotation, spawnParams));
+				spawnActor->Init(spawnActor->GetHealth(), spawnActor->GetSpeed() + waveRef->GetEnemySpeedBonus(), despawnDistance, this);
 
+				m_toSpawn.RemoveAt(0);
+				m_amountToSpawn -= 1;
 				m_spawnedEnemies.Add(spawnActor);
-				m_toSpawn -= 1;
 
 				ASpawnPoint* temp = Cast<ASpawnPoint>(activeSpawnPoints[rand]);
 				temp->ResetTimer();
@@ -135,8 +86,7 @@ void AEnemySpawner::SpawnEnemy()
 		}
 	}
 }
-
-void AEnemySpawner::SpawnMiniBoss()
+void AEnemySpawner::SpawnExtra()
 {
 	if (m_spawnPoints.Num() != 0)
 	{
@@ -164,20 +114,20 @@ void AEnemySpawner::SpawnMiniBoss()
 			FActorSpawnParameters spawnParams;
 			spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-			TSubclassOf<AActor> toSpawn = m_miniBoss;
+			TSubclassOf<AActor>* toSpawn = &m_toSpawnExtras[0];
 
 			if (toSpawn != nullptr)
 			{
-				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(toSpawn, location, rotation, spawnParams));
-				spawnActor->Init(spawnActor->m_health, (spawnActor->m_speed + m_enemySpeedBonus), 99999, this);
+				AEnemyBase* spawnActor = Cast<AEnemyBase>(GetWorld()->SpawnActor<AActor>(*toSpawn, location, rotation, spawnParams));
+				spawnActor->Init(spawnActor->GetHealth(), spawnActor->GetSpeed() + waveRef->GetEnemySpeedBonus(), despawnDistance, this);
 
-				m_enemiesAlive += 1;
+				m_toSpawnExtras.RemoveAt(0);
+				m_extrasToSpawn -= 1;
 
 				ASpawnPoint* temp = Cast<ASpawnPoint>(activeSpawnPoints[rand]);
 				temp->ResetTimer();
 
-				m_spawnMiniBoss = false;
-				m_waveRef->SetMiniBossCheck(false);
+				m_spawnTimer = 0.0f;
 			}
 		}
 	}
@@ -185,30 +135,73 @@ void AEnemySpawner::SpawnMiniBoss()
 
 void AEnemySpawner::NewWave()
 {	
-	//m_poolRef->NextWave();
-	//m_poolRef->GenerateWave();
+	waveRef->NextWave();
+	m_toSpawn = waveRef->GenerateWave();
+	m_amountToSpawn = m_toSpawn.Num();
+}
 
-	//m_waveLimit = m_poolRef->GetWaveLimit();
+void AEnemySpawner::QueueExtra(TSubclassOf<AActor> extra)
+{
+	m_toSpawnExtras.Add(extra);
+	m_extrasToSpawn += 1;
+}
 
-	m_waveRef->NextWave();
+void AEnemySpawner::QueueExtra(TArray<TSubclassOf<AActor>> extras)
+{
+	for (int i = 0; i < extras.Num(); i++)
+	{
+		m_toSpawnExtras.Add(extras[i]);
+		m_extrasToSpawn += 1;
+	}
 
-	m_waveLimit = m_waveRef->GetAmountOfEnemies();
-	m_enemySpeedBonus = m_waveRef->GetEnemySpeedBonus();
-
-	m_toSpawn = m_waveLimit;
-	m_enemiesAlive = m_waveLimit;
+	extras.Empty();
 }
 
 void AEnemySpawner::DespawnEnemy(class AEnemyBase* enemy)
 {
 	if (enemy != nullptr)
 	{
+		FString name = enemy->name;
+
 		if (m_spawnedEnemies.Contains(enemy))
 		{
-			m_spawnedEnemies.Remove(enemy);			
-		}
+			m_spawnedEnemies.Remove(enemy);
 
-		m_toSpawn += 1;
+			if (name.Compare("Grape") == 0)
+			{
+				m_toSpawn.Add(waveRef->poolEnemies[0]);
+			}
+			else if (name.Compare("Strawberry") == 0)
+			{
+				m_toSpawn.Add(waveRef->poolEnemies[1]);
+			}
+			else if (name.Compare("Watermelon") == 0)
+			{
+				m_toSpawn.Add(waveRef->poolEnemies[2]);
+			}
+
+			m_amountToSpawn += 1;
+		}
+		else
+		{
+			if(name.Compare("Grape") == 0)
+			{
+				QueueExtra(waveRef->poolEnemies[0]);
+			}
+			else if (name.Compare("Strawberry") == 0)
+			{
+				QueueExtra(waveRef->poolEnemies[1]);
+			}
+			else if (name.Compare("Watermelon") == 0)
+			{
+				QueueExtra(waveRef->poolEnemies[2]);
+			}
+			else if (name.Compare("Tank") == 0)
+			{
+				QueueExtra(waveRef->miniBoss);
+			}
+
+		}
 
 		enemy->Destroy();
 	}
@@ -223,14 +216,8 @@ void AEnemySpawner::KillEnemy(AEnemyBase* enemy)
 			m_spawnedEnemies.Remove(enemy);
 		}
 
-		m_enemiesAlive -= 1;
 		enemy->Destroy();
 	}
-}
-
-int AEnemySpawner::GetRemainingEnemies()
-{	
-	return m_enemiesAlive;
 }
 
 // Called every frame
@@ -238,21 +225,16 @@ void AEnemySpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (m_waveRef->SpawnMiniBossCheck() == true)
+	if (m_extrasToSpawn > 0)
 	{
-		m_spawnMiniBoss = true;
-
-		if (m_spawnMiniBoss == true)
-		{
-			SpawnMiniBoss();
-		}
+		SpawnExtra();
 	}
 
-	if (m_toSpawn > 0)
+	if (m_amountToSpawn > 0)
 	{
 		m_spawnTimer += DeltaTime;
 
-		if (m_spawnTimer >= m_spawnDelay)
+		if (m_spawnTimer >= spawnDelay)
 		{
 			SpawnEnemy();
 		}
