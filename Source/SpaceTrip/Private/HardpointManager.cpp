@@ -4,6 +4,7 @@
 #include "HardpointManager.h"
 #include "Hardpoint.h"
 #include "EnemySpawner.h"
+#include "ScoreManager.h"
 
 // Sets default values
 AHardpointManager::AHardpointManager()
@@ -148,6 +149,7 @@ void AHardpointManager::ResetHardpoint()
 	m_activeHardpoint->SetCooldown(hardpointCooldown);
 	m_activeHardpoint->SetIsStarted(false);
 
+	scoreManager->AdjustScore(hardpointCompletionScore);
 	m_hardpointsComplete += 1;
 	m_delayTimer = 0;
 	m_activeHardpoint = nullptr;

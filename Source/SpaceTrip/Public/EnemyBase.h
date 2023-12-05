@@ -48,43 +48,46 @@ protected:
 
 public:	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
+	int scoreBonus;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	FString name;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-	float m_health;
+	float health;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-	float m_speed;
+	float speed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		int m_medHP;
+		int medHP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		int m_lowHP;
+		int lowHP;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UStaticMesh* m_fullMesh;
+		UStaticMesh* fullMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UStaticMesh* m_medMesh;
+		UStaticMesh* medMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UStaticMesh* m_lowMesh;
+		UStaticMesh* lowMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UMaterial* m_fullMaterial;
+		UMaterial* fullMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UMaterial* m_medMaterial;
+		UMaterial* medMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UMaterial* m_lowMaterial;
+		UMaterial* lowMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-	TSubclassOf<AActor> m_ammoType;
+	TSubclassOf<AActor> ammoType;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-	int m_ammoChance;
+	int ammoChance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-	class UStaticMeshComponent* m_meshComp;
+	class UStaticMeshComponent* meshComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-	class UNiagaraComponent* m_niagara;
+	class UNiagaraComponent* niagara;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-	class UNiagaraSystem* m_niagaraSystem;
+	class UNiagaraSystem* niagaraSystem;
 
 private:
 	UCharacterMovementComponent* m_movementComp;

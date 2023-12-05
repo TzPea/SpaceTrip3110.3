@@ -34,6 +34,10 @@ protected:
 	virtual void BeginPlay() override;
 
 public:
+	UPROPERTY(EditAnywhere)
+	class AScoreManager* scoreManager;
+	UPROPERTY(EditAnywhere)
+	int hardpointCompletionScore;
 
 	UPROPERTY(EditAnywhere)
 	class AEnemySpawner* enemySpawner;
