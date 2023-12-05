@@ -153,7 +153,7 @@ bool AHardpoint::GetIsActive()
 
 void AHardpoint::SetIsStarted(bool check)
 {
-	if (check == true && m_manager != nullptr)
+	if (isStarted == false && check == true && m_manager != nullptr)
 	{
 		m_manager->GenerateRandomEvent();
 	}

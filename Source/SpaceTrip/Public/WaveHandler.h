@@ -35,6 +35,11 @@ protected:
 public:
 
 	UPROPERTY(EditAnywhere)
+	class AScoreManager* scoreManager;
+	UPROPERTY(EditAnywhere)
+	int waveCompletionScore;
+
+	UPROPERTY(EditAnywhere)
 	class AEnemySpawner* spawnerRef;
 
 	UPROPERTY(EditAnywhere)

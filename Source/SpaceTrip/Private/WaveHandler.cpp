@@ -5,6 +5,7 @@
 #include "EnemyBase.h"
 #include "EnemySpawner.h"
 #include "Sound/SoundWave.h"
+#include "ScoreManager.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -73,6 +74,8 @@ void AWaveHandler::NextWave()
 	{
 		return;
 	}
+
+	scoreManager->AdjustScore(waveCompletionScore);
 
 	int rand = FMath::RandRange(0, (waveSounds.Num() - 1));
 
