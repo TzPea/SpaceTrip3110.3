@@ -4,6 +4,7 @@
 #include "SpawnPoint.h"
 #include "WaveHandler.h"
 #include "EnemyBase.h"
+#include "ScoreManager.h"
 #include "Kismet/GameplayStatics.h"
 
 // Sets default values
@@ -248,6 +249,7 @@ void AEnemySpawner::KillEnemy(AEnemyBase* enemy)
 			m_spawnedEnemies.Remove(enemy);
 		}
 
+		scoreManager->AdjustScore(enemy->scoreBonus);
 		enemy->Destroy();
 	}
 }

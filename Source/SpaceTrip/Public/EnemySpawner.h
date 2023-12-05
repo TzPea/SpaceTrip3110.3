@@ -35,6 +35,8 @@ protected:
 	void SpawnExtra();
 
 public:	
+	UPROPERTY(EditAnywhere)
+	class AScoreManager* scoreManager;
 
 	UPROPERTY(EditAnywhere)
 	class AWaveHandler* waveRef;

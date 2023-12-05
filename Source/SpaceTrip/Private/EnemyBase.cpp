@@ -17,23 +17,23 @@ AEnemyBase::AEnemyBase()
 
 	m_despawnTimer = 0;
 
-	m_health = 0;
-	m_speed = 0;
+	health = 0;
+	speed = 0;
 
 	m_isActive = false;
 }
 
-void AEnemyBase::Init(int health, float speed, float despawnDistance, AEnemySpawner* spawner)
+void AEnemyBase::Init(int _health, float _speed, float despawnDistance, AEnemySpawner* spawner)
 {
-	m_health = health;
-	m_speed = speed;
+	health = _health;
+	speed = _speed;
 
 	m_despawnDistance = despawnDistance;
 	m_movementComp = Cast<UCharacterMovementComponent>(GetMovementComponent());
 
 	if (m_movementComp != nullptr)
 	{
-		m_movementComp->MaxWalkSpeed = m_speed;
+		m_movementComp->MaxWalkSpeed = speed;
 	}
 
 	m_controller = Cast<AAIController>(GetController());
@@ -48,57 +48,57 @@ bool AEnemyBase::GetIsActive()
 
 float AEnemyBase::GetSpeed()
 {
-	return m_speed;
+	return speed;
 }
 
 int AEnemyBase::GetHealth()
 {
-	return m_health;
+	return health;
 }
 
-void AEnemyBase::SetHealth(int health)
+void AEnemyBase::SetHealth(int _health)
 {
-	m_health = health;
+	health = _health;
 }
 void AEnemyBase::HitActor()
 {
-	m_health -= 1;
+	health -= 1;
 
-	if (m_meshComp != nullptr)
+	if (meshComp != nullptr)
 	{
 		int numberOfMaterials;
 
-		if (m_health == m_medHP)
+		if (health == medHP)
 		{
-			m_meshComp->SetStaticMesh(m_medMesh);
+			meshComp->SetStaticMesh(medMesh);
 
-			numberOfMaterials = m_meshComp->GetNumMaterials();
+			numberOfMaterials = meshComp->GetNumMaterials();
 
 			for (int i = 0; i < numberOfMaterials; i++)
 			{
-				if (m_meshComp->GetMaterial(i))
+				if (meshComp->GetMaterial(i))
 				{
-					m_meshComp->SetMaterial(i, m_medMaterial);
+					meshComp->SetMaterial(i, medMaterial);
 				}
 			}
 		}
-		else if (m_health == m_lowHP)
+		else if (health == lowHP)
 		{
-			m_meshComp->SetStaticMesh(m_lowMesh);
+			meshComp->SetStaticMesh(lowMesh);
 
-			numberOfMaterials = m_meshComp->GetNumMaterials();
+			numberOfMaterials = meshComp->GetNumMaterials();
 
 			for (int i = 0; i < numberOfMaterials; i++)
 			{
-				if (m_meshComp->GetMaterial(i))
+				if (meshComp->GetMaterial(i))
 				{
-					m_meshComp->SetMaterial(i, m_lowMaterial);
+					meshComp->SetMaterial(i, lowMaterial);
 				}
 			}
 		}
-		else if (m_health <= 0)
+		else if (health <= 0)
 		{
-			m_meshComp->SetStaticMesh(nullptr);
+			meshComp->SetStaticMesh(nullptr);
 
 			OnDeath();
 		}
@@ -120,10 +120,10 @@ void AEnemyBase::OnDeath()
 		m_spawner->KillEnemy(this);
 	}
 
-	if (m_niagaraSystem != nullptr)
+	if (niagaraSystem != nullptr)
 	{
-		m_niagara = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), m_niagaraSystem, GetActorLocation());
-		m_niagara->Activate();
+		niagara = UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), niagaraSystem, GetActorLocation());
+		niagara->Activate();
 	}
 
 	DestroyEnemy(true);
@@ -135,13 +135,13 @@ void AEnemyBase::DestroyEnemy(bool isKilled)
 	{
 		int rand = FMath::RandRange(1, 100);
 
-		if (rand <= m_ammoChance)
+		if (rand <= ammoChance)
 		{
 			FVector location = GetActorLocation();
 			location.Z = 90.0f;
 			FRotator rotation = GetActorRotation();
 
-			GetWorld()->SpawnActor<AActor>(m_ammoType, location, rotation);
+			GetWorld()->SpawnActor<AActor>(ammoType, location, rotation);
 		}
 	}
 
@@ -181,7 +181,7 @@ void AEnemyBase::BeginPlay()
 
 	for (int32 i = 0; i < mesh.Num(); i++)
 	{
-		m_meshComp = mesh[i];
+		meshComp = mesh[i];
 	}
 }
 
