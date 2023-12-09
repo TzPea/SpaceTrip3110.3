@@ -58,23 +58,23 @@ public:
 	float speed;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		int medHP;
+	int medHP;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		int lowHP;
+	int lowHP;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UStaticMesh* fullMesh;
+	UStaticMesh* fullMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UStaticMesh* medMesh;
+	UStaticMesh* medMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UStaticMesh* lowMesh;
+	UStaticMesh* lowMesh;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UMaterial* fullMaterial;
+	UMaterial* fullMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UMaterial* medMaterial;
+	UMaterial* medMaterial;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-		UMaterial* lowMaterial;
+	UMaterial* lowMaterial;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	TSubclassOf<AActor> ammoType;
@@ -82,14 +82,14 @@ public:
 	int ammoChance;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
-	class UStaticMeshComponent* meshComp;
+	UStaticMeshComponent* meshComp;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	class UNiagaraComponent* niagara;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	class UNiagaraSystem* niagaraSystem;
 
-private:
+protected:
 	UCharacterMovementComponent* m_movementComp;
 	class AAIController* m_controller;
 
