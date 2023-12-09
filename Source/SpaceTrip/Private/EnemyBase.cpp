@@ -178,14 +178,6 @@ void AEnemyBase::BeginPlay()
 	Super::BeginPlay();
 
 	m_player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-
-	TArray<UStaticMeshComponent*> mesh;
-	GetComponents<UStaticMeshComponent>(mesh);
-
-	for (int32 i = 0; i < mesh.Num(); i++)
-	{
-		meshComp = mesh[i];
-	}
 }
 
 // Called every frame

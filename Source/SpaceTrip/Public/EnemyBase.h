@@ -89,7 +89,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy")
 	class UNiagaraSystem* niagaraSystem;
 
-private:
+protected:
 	UCharacterMovementComponent* m_movementComp;
 	class AAIController* m_controller;
 
