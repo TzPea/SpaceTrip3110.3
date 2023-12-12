@@ -140,8 +140,7 @@ void AEnemyBase::DestroyEnemy(bool isKilled)
 
 		if (rand <= ammoChance)
 		{
-			FVector location = GetActorLocation();
-			location.Z = 90.0f;
+			FVector location = GetActorLocation();			
 			FRotator rotation = GetActorRotation();
 
 			GetWorld()->SpawnActor<AActor>(ammoType, location, rotation);
@@ -192,7 +191,11 @@ void AEnemyBase::Tick(float DeltaTime)
 
 		if (m_controller != nullptr && m_player != nullptr)
 		{
-			m_controller->MoveTo(m_player);
+			FAIMoveRequest moveTo;
+			moveTo.SetAcceptanceRadius(0);
+			moveTo.SetGoalActor(m_player);
+
+			m_controller->MoveTo(moveTo);
 			m_playerPos = m_player->GetActorLocation();
 		}
 		else if (m_player == nullptr)
